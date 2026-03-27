@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { fetchProjects, type Project } from '@/api/projects';
 import { DataTable, type TableColumn } from '@/components/DataTable';
 
@@ -26,18 +26,26 @@ function toRow(p: Project): Record<string, string> {
 }
 
 export function ProjectsPage() {
+  const location = useLocation();
+  const hasLoadedOnce = useRef(false);
   const [items, setItems] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    if (!location.pathname.startsWith('/projects')) return;
     let cancelled = false;
-    setLoading(true);
+    const isNewRoute = location.pathname === '/projects/new';
+    const silentRefresh = isNewRoute && hasLoadedOnce.current;
+    if (!silentRefresh) setLoading(true);
     setError(null);
     fetchProjects()
       .then((data) => {
-        if (!cancelled) setItems(data);
+        if (!cancelled) {
+          setItems(data);
+          hasLoadedOnce.current = true;
+        }
       })
       .catch(() => {
         if (!cancelled) setError('Could not load projects.');
@@ -48,7 +56,7 @@ export function ProjectsPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [location.pathname, location.key]);
 
   const rows = useMemo(() => {
     const q = search.trim().toLowerCase();

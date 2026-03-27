@@ -12,6 +12,10 @@ export function CreateProjectPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
+  function close() {
+    navigate('/projects');
+  }
+
   function validate(): string | null {
     if (!name.trim()) return 'Name is required.';
     if (!owner.trim()) return 'Owner is required.';
@@ -43,13 +47,40 @@ export function CreateProjectPage() {
   }
 
   return (
-    <div data-testid="create-project-page">
-      <h2 className="dashboard-title" data-testid="create-project-title">
-        Create Project
-      </h2>
+    <div
+      className="create-overlay-backdrop"
+      data-testid="create-project-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-project-title"
+    >
+      <div
+        className="create-overlay-panel"
+        data-testid="create-project-page"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="create-overlay-header">
+          <h2
+            id="create-project-title"
+            className="create-overlay-heading"
+            data-testid="create-project-title"
+          >
+            Create Project
+          </h2>
+          <button
+            type="button"
+            className="create-overlay-close"
+            data-testid="create-project-close"
+            aria-label="Close"
+            disabled={saving}
+            onClick={close}
+          >
+            ×
+          </button>
+        </header>
 
-      <div className="create-form-card">
         <form
+          className="create-overlay-form"
           data-testid="create-project-form"
           onSubmit={handleSubmit}
           noValidate
@@ -111,7 +142,7 @@ export function CreateProjectPage() {
               className="btn-secondary"
               data-testid="create-project-cancel"
               disabled={saving}
-              onClick={() => navigate('/projects')}
+              onClick={close}
             >
               Cancel
             </button>

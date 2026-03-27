@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { fetchAssets, type Asset } from '@/api/assets';
 import { DataTable, type TableColumn } from '@/components/DataTable';
 
@@ -26,18 +26,26 @@ function toRow(a: Asset): Record<string, string> {
 }
 
 export function AssetsPage() {
+  const location = useLocation();
+  const hasLoadedOnce = useRef(false);
   const [items, setItems] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
   useEffect(() => {
+    if (!location.pathname.startsWith('/assets')) return;
     let cancelled = false;
-    setLoading(true);
+    const isNewRoute = location.pathname === '/assets/new';
+    const silentRefresh = isNewRoute && hasLoadedOnce.current;
+    if (!silentRefresh) setLoading(true);
     setError(null);
     fetchAssets()
       .then((data) => {
-        if (!cancelled) setItems(data);
+        if (!cancelled) {
+          setItems(data);
+          hasLoadedOnce.current = true;
+        }
       })
       .catch(() => {
         if (!cancelled) setError('Could not load assets.');
@@ -48,7 +56,7 @@ export function AssetsPage() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [location.pathname, location.key]);
 
   const rows = useMemo(() => {
     const q = search.trim().toLowerCase();

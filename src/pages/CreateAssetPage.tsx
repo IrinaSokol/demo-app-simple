@@ -13,6 +13,10 @@ export function CreateAssetPage() {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
+  function close() {
+    navigate('/assets');
+  }
+
   function validate(): string | null {
     if (!name.trim()) return 'Name is required.';
     if (!type) return 'Type is required.';
@@ -44,13 +48,40 @@ export function CreateAssetPage() {
   }
 
   return (
-    <div data-testid="create-asset-page">
-      <h2 className="dashboard-title" data-testid="create-asset-title">
-        Create Asset
-      </h2>
+    <div
+      className="create-overlay-backdrop"
+      data-testid="create-asset-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="create-asset-title"
+    >
+      <div
+        className="create-overlay-panel"
+        data-testid="create-asset-page"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <header className="create-overlay-header">
+          <h2
+            id="create-asset-title"
+            className="create-overlay-heading"
+            data-testid="create-asset-title"
+          >
+            Create Asset
+          </h2>
+          <button
+            type="button"
+            className="create-overlay-close"
+            data-testid="create-asset-close"
+            aria-label="Close"
+            disabled={saving}
+            onClick={close}
+          >
+            ×
+          </button>
+        </header>
 
-      <div className="create-form-card">
         <form
+          className="create-overlay-form"
           data-testid="create-asset-form"
           onSubmit={handleSubmit}
           noValidate
@@ -118,7 +149,7 @@ export function CreateAssetPage() {
               className="btn-secondary"
               data-testid="create-asset-cancel"
               disabled={saving}
-              onClick={() => navigate('/assets')}
+              onClick={close}
             >
               Cancel
             </button>

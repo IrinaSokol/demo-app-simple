@@ -2,8 +2,8 @@ import { Navigate, Outlet, Route, Routes } from 'react-router-dom';
 import { Topbar } from '@/components/Topbar';
 import { Sidebar } from '@/components/Sidebar';
 import { LoginPage } from '@/pages/LoginPage';
-import { ProjectsPage } from '@/pages/ProjectsPage';
-import { AssetsPage } from '@/pages/AssetsPage';
+import { ProjectsLayout } from '@/layouts/ProjectsLayout';
+import { AssetsLayout } from '@/layouts/AssetsLayout';
 import { CreateProjectPage } from '@/pages/CreateProjectPage';
 import { CreateAssetPage } from '@/pages/CreateAssetPage';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
@@ -28,10 +28,12 @@ export function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
-          <Route path="/projects" element={<ProjectsPage />} />
-          <Route path="/projects/new" element={<CreateProjectPage />} />
-          <Route path="/assets" element={<AssetsPage />} />
-          <Route path="/assets/new" element={<CreateAssetPage />} />
+          <Route path="/projects" element={<ProjectsLayout />}>
+            <Route path="new" element={<CreateProjectPage />} />
+          </Route>
+          <Route path="/assets" element={<AssetsLayout />}>
+            <Route path="new" element={<CreateAssetPage />} />
+          </Route>
         </Route>
       </Route>
       <Route path="/" element={<Navigate to="/projects" replace />} />
