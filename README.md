@@ -114,14 +114,17 @@ A separate TypeScript Playwright project lives in **`playwright/`**. It splits *
 2. In another terminal:
 
 ```bash
-cd playwright
 npm install
 npx playwright install chromium
 ```
 
 Copy `playwright/.env.example` to `playwright/.env` and adjust URLs if your dev ports differ.
 
-3. Run tests from `playwright/`: `npm test` (or `npm run test:api` / `npm run test:ui`).
+3. Run tests:
+   - From **repo root**: `npm run test:playwright`, **or**
+   - From **`playwright/`**: `npm test` (or `npm run test:api` / `npm run test:ui`).
+
+The repo uses an **npm workspace** for `playwright/` so there is only **one** hoisted `@playwright/test`. If you see **`test.describe` not expected**, delete `playwright/node_modules`, run `npm install` from the root again, and use the commands above (see **[playwright/README.md](playwright/README.md)**).
 
 Full setup, env vars (`BASE_URL` / `API_URL`), architecture notes, and report commands are documented in **[playwright/README.md](playwright/README.md)**.
 

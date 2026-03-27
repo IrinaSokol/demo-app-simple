@@ -24,7 +24,11 @@ export default defineConfig({
     },
     {
       name: 'ui',
-      testMatch: 'ui/specs/dashboards*.spec.ts',
+      testMatch: [
+        'ui/specs/dashboards*.spec.ts',
+        'ui/specs/projects.create.spec.ts',
+        'ui/specs/assets.create.spec.ts',
+      ],
       use: {
         ...devices['Desktop Chrome'],
         storageState: path.join(rootDir, '.auth', 'admin.json'),

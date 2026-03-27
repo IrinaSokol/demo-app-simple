@@ -25,4 +25,14 @@ export class ProjectsDashboardPage {
   async expectOpen(): Promise<void> {
     await expect(this.root).toBeVisible();
   }
+
+  /** Opens the route-based create overlay (`/projects/new`). */
+  async openCreateProject(): Promise<void> {
+    await this.page.getByTestId('projects-new').click();
+  }
+
+  /** List route only (not `/projects/new`). */
+  async expectUrlIsProjectsList(): Promise<void> {
+    await expect(this.page).toHaveURL(/\/projects$/);
+  }
 }

@@ -3,13 +3,17 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "workspaces": [
+    "playwright"
+  ],
   "scripts": {
     "dev": "concurrently -k \"npm run dev:server\" \"npm run dev:client\"",
     "dev:client": "vite",
     "dev:server": "tsx watch server/index.ts",
     "build": "tsc -p tsconfig.app.json --noEmit && vite build",
     "start": "cross-env NODE_ENV=production tsx server/index.ts",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:playwright": "playwright test --config playwright/playwright.config.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

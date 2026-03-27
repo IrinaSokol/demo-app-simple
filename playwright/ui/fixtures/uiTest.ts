@@ -2,11 +2,15 @@ import { test as apiTest, expect } from '../../api/fixtures/apiTest';
 import { LoginPage } from '../pages/LoginPage';
 import { ProjectsDashboardPage } from '../pages/dashboards/ProjectsDashboardPage';
 import { AssetsDashboardPage } from '../pages/dashboards/AssetsDashboardPage';
+import { CreateProjectPage } from '../pages/create/CreateProjectPage';
+import { CreateAssetPage } from '../pages/create/CreateAssetPage';
 
 type UiFixtures = {
   loginPage: LoginPage;
   projectsDashboard: ProjectsDashboardPage;
   assetsDashboard: AssetsDashboardPage;
+  createProjectPage: CreateProjectPage;
+  createAssetPage: CreateAssetPage;
 };
 
 /**
@@ -26,6 +30,12 @@ export const test = apiTest.extend<UiFixtures>({
   },
   assetsDashboard: async ({ page }, use) => {
     await use(new AssetsDashboardPage(page));
+  },
+  createProjectPage: async ({ page }, use) => {
+    await use(new CreateProjectPage(page));
+  },
+  createAssetPage: async ({ page }, use) => {
+    await use(new CreateAssetPage(page));
   },
 });
 
