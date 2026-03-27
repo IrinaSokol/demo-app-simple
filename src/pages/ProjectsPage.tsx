@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchProjects, type Project } from '@/api/projects';
 import { DataTable, type TableColumn } from '@/components/DataTable';
 
@@ -68,6 +69,13 @@ export function ProjectsPage() {
       </h2>
 
       <div className="dashboard-toolbar">
+        <Link
+          to="/projects/new"
+          className="btn-new"
+          data-testid="projects-new"
+        >
+          New Project
+        </Link>
         <input
           type="search"
           placeholder="Search by name or owner"

@@ -66,6 +66,10 @@ function clone<T>(data: T): T {
   return JSON.parse(JSON.stringify(data)) as T;
 }
 
+const PROJECT_STATUSES: ProjectRow['status'][] = ['Active', 'Draft', 'Archived'];
+const ASSET_TYPES: AssetRow['type'][] = ['Laptop', 'License', 'Device'];
+const ASSET_STATUSES: AssetRow['status'][] = ['Available', 'Assigned', 'Retired'];
+
 export function createDataStore() {
   let projects = clone(INITIAL_PROJECTS);
   let assets = clone(INITIAL_ASSETS);
@@ -77,11 +81,45 @@ export function createDataStore() {
     getAssets(): AssetRow[] {
       return assets;
     },
+    addProject(input: {
+      name: string;
+      owner: string;
+      status: ProjectRow['status'];
+    }): ProjectRow {
+      const id = `p-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      const row: ProjectRow = {
+        id,
+        name: input.name.trim(),
+        owner: input.owner.trim(),
+        status: input.status,
+        updatedAt: new Date().toISOString(),
+      };
+      projects.push(row);
+      return row;
+    },
+    addAsset(input: {
+      name: string;
+      type: AssetRow['type'];
+      status: AssetRow['status'];
+    }): AssetRow {
+      const id = `a-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      const row: AssetRow = {
+        id,
+        name: input.name.trim(),
+        type: input.type,
+        status: input.status,
+        updatedAt: new Date().toISOString(),
+      };
+      assets.push(row);
+      return row;
+    },
     reset(): void {
       projects = clone(INITIAL_PROJECTS);
       assets = clone(INITIAL_ASSETS);
     },
   };
 }
+
+export { PROJECT_STATUSES, ASSET_TYPES, ASSET_STATUSES };
 
 export type DataStore = ReturnType<typeof createDataStore>;

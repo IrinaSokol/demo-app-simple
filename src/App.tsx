@@ -4,6 +4,8 @@ import { Sidebar } from '@/components/Sidebar';
 import { LoginPage } from '@/pages/LoginPage';
 import { ProjectsPage } from '@/pages/ProjectsPage';
 import { AssetsPage } from '@/pages/AssetsPage';
+import { CreateProjectPage } from '@/pages/CreateProjectPage';
+import { CreateAssetPage } from '@/pages/CreateAssetPage';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
 function AppShell() {
@@ -27,7 +29,9 @@ export function App() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AppShell />}>
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/new" element={<CreateProjectPage />} />
           <Route path="/assets" element={<AssetsPage />} />
+          <Route path="/assets/new" element={<CreateAssetPage />} />
         </Route>
       </Route>
       <Route path="/" element={<Navigate to="/projects" replace />} />

@@ -11,3 +11,16 @@ export type Asset = {
 export function fetchAssets(): Promise<Asset[]> {
   return apiFetch<Asset[]>('/api/assets');
 }
+
+export type NewAssetInput = {
+  name: string;
+  type: string;
+  status: string;
+};
+
+export function createAsset(input: NewAssetInput): Promise<Asset> {
+  return apiFetch<Asset>('/api/assets', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  });
+}

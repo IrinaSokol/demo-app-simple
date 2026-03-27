@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { fetchAssets, type Asset } from '@/api/assets';
 import { DataTable, type TableColumn } from '@/components/DataTable';
 
@@ -68,6 +69,9 @@ export function AssetsPage() {
       </h2>
 
       <div className="dashboard-toolbar">
+        <Link to="/assets/new" className="btn-new" data-testid="assets-new">
+          New Asset
+        </Link>
         <input
           type="search"
           placeholder="Search by name or type"

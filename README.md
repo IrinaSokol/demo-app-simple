@@ -24,6 +24,33 @@ npm run dev
 
 Open **http://localhost:5173**.
 
+### If you see `EADDRINUSE` / “address already in use :::3001”
+
+That means **something else is already listening on port 3001** (often an old Express/`tsx` process from a previous `npm run dev` or `npm start`). The **API process exits**, but Vite may still start — then `/api` is proxied to whatever is on 3001, which may be the **wrong** app or an outdated server → confusing errors (e.g. “Not Found” on save).
+
+**Fix:** stop the process using 3001, then run `npm run dev` again.
+
+- **Windows (PowerShell):** see which PID owns the port, then end it:
+
+  ```powershell
+  netstat -ano | findstr :3001
+  taskkill /PID <pid_from_last_column> /F
+  ```
+
+- **macOS / Linux:** `lsof -i :3001` then `kill <pid>`.
+
+You do **not** need to change application code for this; it is a **local port conflict**.
+
+### If “Save” on Create Project / Create Asset shows “Not Found”
+
+That almost always means the browser got **HTTP 404** on `POST /api/projects` or `POST /api/assets` (the UI surfaces `statusText` as “Not Found” when the body is not JSON).
+
+Common causes:
+
+1. **Stale Node process on port 3001** — An older Express instance without the POST routes is still running. Stop it, then run `npm run dev` again (or restart `dev:server`).
+2. **`vite` or `vite preview` without Express** — The UI must reach the API on **3001**. Use **`npm run dev`** (starts both), or **`npm start`** after `npm run build`, or run the server separately and optionally set **`VITE_API_BASE_URL=http://localhost:3001`** in `.env.local` so the browser calls Express directly (CORS is enabled).
+3. **`vite preview`** — The dev proxy does not apply unless configured. This repo sets **`preview.proxy`** in `vite.config.ts` so `/api` is forwarded to **3001** when you use `npm run preview`, but Express must still be running.
+
 ## Build
 
 ```bash
@@ -69,8 +96,10 @@ Render injects `PORT`; the server listens on `process.env.PORT`.
 | Method | Path | Auth | Description |
 |--------|------|------|-------------|
 | POST | `/api/auth/login` | No | Body: `{ "email", "password" }` → `{ "token": "demo-token" }` or 401 |
-| GET | `/api/projects` | `Authorization: Bearer demo-token` | Seeded projects (response delayed ~300–800ms) |
-| GET | `/api/assets` | `Authorization: Bearer demo-token` | Seeded assets (response delayed ~300–800ms) |
+| GET | `/api/projects` | `Authorization: Bearer demo-token` | List projects (response delayed ~300–800ms) |
+| POST | `/api/projects` | `Authorization: Bearer demo-token` | Body: `{ "name", "owner", "status" }` → `201` + created project |
+| GET | `/api/assets` | `Authorization: Bearer demo-token` | List assets (response delayed ~300–800ms) |
+| POST | `/api/assets` | `Authorization: Bearer demo-token` | Body: `{ "name", "type", "status" }` → `201` + created asset |
 | POST | `/api/admin/reset` | `Authorization: Bearer demo-token` | Resets in-memory data to the initial seed |
 
 Base URL in dev (from tests): `http://localhost:3001` for direct API calls, or use the app origin in production.
