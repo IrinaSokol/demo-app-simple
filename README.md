@@ -70,10 +70,10 @@ Open **http://localhost:3001** (or the port in `PORT`). The server serves the AP
 
 ## Deploy (Heroku)
 
-1. Create a Heroku app and connect the repo (or use Heroku Git).
-2. Ensure the Node buildpack is used. Heroku runs `npm install` and, if present, **`npm run build`**.
-3. The `start` script runs the Express server with `NODE_ENV=production`, which serves `dist/`.
-4. Set no extra config unless you need a custom stack.
+1. Create a Heroku app and connect this repository (or use Heroku Git). The **Node** buildpack should run automatically.
+2. After `npm install`, Heroku runs **`heroku-postbuild`** → **`npm run build`** (Vite output in `dist/`).
+3. The **`web`** process runs **`npm start`**: Express with `NODE_ENV=production` serves `/api` and the SPA from `dist/`. Heroku sets **`PORT`**; the server already reads `process.env.PORT`.
+4. Optional: `engines.node` in `package.json` documents supported Node (**>=20**).
 
 ```bash
 heroku create your-app-name
@@ -81,6 +81,8 @@ git push heroku main
 ```
 
 Open the app URL. Use the same demo credentials.
+
+Playwright tests live in a **separate** repo (**demo-app-simple-e2e**); point `BASE_URL` and `API_URL` at your Heroku URL to run tests against the deployed app.
 
 ## Deploy (Render)
 
@@ -104,36 +106,18 @@ Render injects `PORT`; the server listens on `process.env.PORT`.
 
 Base URL in dev (from tests): `http://localhost:3001` for direct API calls, or use the app origin in production.
 
-## Playwright automation
+## Playwright / E2E tests
 
-A separate TypeScript Playwright project lives in **`playwright/`**. It splits **API** and **UI** tests, uses page/component objects, and shows **API setup in `beforeEach`** (e.g. reset seed before dashboard checks).
+End-to-end and API tests are maintained in a **separate project** (**demo-app-simple-e2e**), next to this repo. That project is not deployed to Heroku; configure its `.env` with your **local** URLs or your **Heroku** app URL (`BASE_URL` and `API_URL` both set to `https://<your-app>.herokuapp.com`).
 
-**Quick start**
-
-1. Start the demo app (see **Run locally** above).
-2. In another terminal:
-
-```bash
-npm install
-npx playwright install chromium
-```
-
-Copy `playwright/.env.example` to `playwright/.env` and adjust URLs if your dev ports differ.
-
-3. Run tests:
-   - From **repo root**: `npm run test:playwright`, **or**
-   - From **`playwright/`**: `npm test` (or `npm run test:api` / `npm run test:ui`).
-
-The repo uses an **npm workspace** for `playwright/` so there is only **one** hoisted `@playwright/test`. If you see **`test.describe` not expected**, delete `playwright/node_modules`, run `npm install` from the root again, and use the commands above (see **[playwright/README.md](playwright/README.md)**).
-
-Full setup, env vars (`BASE_URL` / `API_URL`), architecture notes, and report commands are documented in **[playwright/README.md](playwright/README.md)**.
+See the e2e project’s **README** for install, `npx playwright install chromium`, and `npm test`.
 
 ## Project layout
 
 - `src/` — React app (pages, components, API helpers, routes)
 - `server/` — Express app, seed data, route modules
 - `dist/` — Production frontend build (generated)
-- `playwright/` — Playwright tests (API + UI, fixtures, page objects)
+- `Procfile` — Heroku `web` process (`npm start`)
 
 ## License
 
