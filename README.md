@@ -73,7 +73,15 @@ Open **http://localhost:3001** (or the port in `PORT`). The server serves the AP
 1. Create a Heroku app and connect this repository (or use Heroku Git). The **Node** buildpack should run automatically.
 2. After `npm install`, Heroku runs **`heroku-postbuild`** → **`npm run build`** (Vite output in `dist/`).
 3. The **`web`** process runs **`npm start`**: Express with `NODE_ENV=production` serves `/api` and the SPA from `dist/`. Heroku sets **`PORT`**; the server already reads `process.env.PORT`.
-4. Optional: `engines.node` in `package.json` documents supported Node (**>=20**).
+4. `engines.node` is pinned to **22.x** (Heroku-supported LTS line; avoids a wide `>=20` range warning).
+
+Heroku runs **`npm ci`** when `package-lock.json` is present (npm **11** on the stack). If `npm ci` fails with **Missing: @esbuild/… from lock file**, the lockfile was likely produced by **npm 10 on Windows**, which omits platform-specific optional entries npm 11 expects. Regenerate the lockfile from the repo root:
+
+```bash
+npx npm@11 install --package-lock-only
+```
+
+Then commit the updated `package-lock.json` and push again.
 
 ```bash
 heroku create your-app-name
@@ -122,3 +130,6 @@ See the e2e project’s **README** for install, `npx playwright install chromium
 ## License
 
 Demo only; no warranty.
+
+Heroku commands
+git push heroku main
