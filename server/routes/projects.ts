@@ -43,5 +43,23 @@ export function createProjectsRouter(store: DataStore) {
     res.status(201).json(created);
   });
 
+  router.get('/:id', requireBearerToken, (req, res) => {
+    const project = store.getProjectById(req.params.id);
+    if (!project) {
+      res.status(404).json({ error: 'Project not found.' });
+      return;
+    }
+    res.json(project);
+  });
+
+  router.post('/:id/archive', requireBearerToken, (req, res) => {
+    const archived = store.archiveProject(req.params.id);
+    if (!archived) {
+      res.status(404).json({ error: 'Project not found.' });
+      return;
+    }
+    res.json(archived);
+  });
+
   return router;
 }

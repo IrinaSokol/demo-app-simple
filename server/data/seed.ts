@@ -81,6 +81,16 @@ export function createDataStore() {
     getAssets(): AssetRow[] {
       return assets;
     },
+    getProjectById(id: string): ProjectRow | undefined {
+      return projects.find((p) => p.id === id);
+    },
+    archiveProject(id: string): ProjectRow | undefined {
+      const row = projects.find((p) => p.id === id);
+      if (!row) return undefined;
+      row.status = 'Archived';
+      row.updatedAt = new Date().toISOString();
+      return row;
+    },
     addProject(input: {
       name: string;
       owner: string;

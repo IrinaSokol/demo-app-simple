@@ -12,6 +12,16 @@ export function fetchProjects(): Promise<Project[]> {
   return apiFetch<Project[]>('/api/projects');
 }
 
+export function fetchProject(id: string): Promise<Project> {
+  return apiFetch<Project>(`/api/projects/${encodeURIComponent(id)}`);
+}
+
+export function archiveProject(id: string): Promise<Project> {
+  return apiFetch<Project>(`/api/projects/${encodeURIComponent(id)}/archive`, {
+    method: 'POST',
+  });
+}
+
 export type NewProjectInput = {
   name: string;
   owner: string;

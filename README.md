@@ -108,6 +108,8 @@ Render injects `PORT`; the server listens on `process.env.PORT`.
 | POST | `/api/auth/login` | No | Body: `{ "email", "password" }` → `{ "token": "demo-token" }` or 401 |
 | GET | `/api/projects` | `Authorization: Bearer demo-token` | List projects (response delayed ~300–800ms) |
 | POST | `/api/projects` | `Authorization: Bearer demo-token` | Body: `{ "name", "owner", "status" }` → `201` + created project |
+| GET | `/api/projects/:id` | `Authorization: Bearer demo-token` | Single project, or `404 { "error": "Project not found." }` |
+| POST | `/api/projects/:id/archive` | `Authorization: Bearer demo-token` | Sets status to `Archived` → `200` + updated project, or 404 |
 | GET | `/api/assets` | `Authorization: Bearer demo-token` | List assets (response delayed ~300–800ms) |
 | POST | `/api/assets` | `Authorization: Bearer demo-token` | Body: `{ "name", "type", "status" }` → `201` + created asset |
 | POST | `/api/admin/reset` | `Authorization: Bearer demo-token` | Resets in-memory data to the initial seed |

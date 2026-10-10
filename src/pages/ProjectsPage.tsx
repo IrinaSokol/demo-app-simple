@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { fetchProjects, type Project } from '@/api/projects';
 import { DataTable, type TableColumn } from '@/components/DataTable';
 
@@ -27,6 +27,7 @@ function toRow(p: Project): Record<string, string> {
 
 export function ProjectsPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const hasLoadedOnce = useRef(false);
   const [items, setItems] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
@@ -36,8 +37,9 @@ export function ProjectsPage() {
   useEffect(() => {
     if (!location.pathname.startsWith('/projects')) return;
     let cancelled = false;
-    const isNewRoute = location.pathname === '/projects/new';
-    const silentRefresh = isNewRoute && hasLoadedOnce.current;
+    // Nested overlay routes (`/projects/new`, `/projects/:projectId`) refresh without the loader.
+    const isOverlayRoute = location.pathname !== '/projects';
+    const silentRefresh = isOverlayRoute && hasLoadedOnce.current;
     if (!silentRefresh) setLoading(true);
     setError(null);
     fetchProjects()
@@ -108,7 +110,12 @@ export function ProjectsPage() {
       ) : null}
 
       {!loading && !error ? (
-        <DataTable columns={columns} rows={rows} tableTestId="projects-table" />
+        <DataTable
+          columns={columns}
+          rows={rows}
+          tableTestId="projects-table"
+          onRowClick={(id) => navigate(`/projects/${id}`)}
+        />
       ) : null}
     </div>
   );

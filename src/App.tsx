@@ -5,6 +5,7 @@ import { LoginPage } from '@/pages/LoginPage';
 import { ProjectsLayout } from '@/layouts/ProjectsLayout';
 import { AssetsLayout } from '@/layouts/AssetsLayout';
 import { CreateProjectPage } from '@/pages/CreateProjectPage';
+import { ProjectDetailsPage } from '@/pages/ProjectDetailsPage';
 import { CreateAssetPage } from '@/pages/CreateAssetPage';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 
@@ -30,6 +31,7 @@ export function App() {
         <Route element={<AppShell />}>
           <Route path="/projects" element={<ProjectsLayout />}>
             <Route path="new" element={<CreateProjectPage />} />
+            <Route path=":projectId" element={<ProjectDetailsPage />} />
           </Route>
           <Route path="/assets" element={<AssetsLayout />}>
             <Route path="new" element={<CreateAssetPage />} />

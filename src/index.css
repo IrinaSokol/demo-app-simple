@@ -311,6 +311,19 @@ tbody tr:hover {
   background: #fafbfc;
 }
 
+tbody tr.row-clickable {
+  cursor: pointer;
+}
+
+tbody tr.row-clickable:hover {
+  background: #eff6ff;
+}
+
+tbody tr.row-clickable:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+}
+
 .muted {
   color: #6b7280;
   font-size: 0.875rem;
@@ -384,4 +397,31 @@ tbody tr:hover {
 
 .create-overlay-form .form-actions {
   margin-top: 1rem;
+}
+
+/* Project details overlay */
+.details-body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.details-list {
+  margin: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.details-field {
+  display: grid;
+  grid-template-columns: 7rem 1fr;
+  gap: 1rem;
+}
+
+.details-field dt {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.details-field dd {
+  margin: 0;
+  font-weight: 500;
 }
