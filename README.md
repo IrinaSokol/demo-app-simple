@@ -2,6 +2,17 @@
 
 Small React + Express demo that mimics a simple enterprise-style admin shell: login, sidebar, and two dashboard tables backed by in-memory REST APIs. Use it to practice UI automation, API setup/teardown, and component-style page objects.
 
+## Video series
+
+This app and its Playwright suite ([demo-app-simple-e2e](https://github.com/IrinaSokol/demo-app-simple-e2e)) are used in a YouTube series. `main` always has the latest version. The code shown in each video is kept in a git tag with the same name in both repositories.
+
+| Video | Tag | Topic |
+|---|---|---|
+| 1 | [`video-1`](https://github.com/IrinaSokol/demo-app-simple/tree/video-1) | Playwright test architecture: Page Objects, Components, fixtures, API helpers |
+| 2 | [`video-2`](https://github.com/IrinaSokol/demo-app-simple/tree/video-2) | AI-first Playwright: adds the Project Details / Archive feature that Claude Code covers with tests |
+
+App changes in the series only add behaviour, so tests from earlier videos keep passing against the latest app.
+
 ## Demo credentials
 
 - **Email:** `admin@demo.com`
